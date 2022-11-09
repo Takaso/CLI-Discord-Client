@@ -1,8 +1,8 @@
 import httpx; import json; import os; from other.colors import *; from pick import pick;
 api_url:str = "https://discord.com/api/v10/"; tok = json.load(open("token/config.json"));
 class Sexcord():
-    def __init__(self) -> None:
-        self.token:str = tok['token'];
+    def __init__(self, token) -> None:
+        self.token:str = token;
         self.headers = {
             "Authorization": self.token
         };
@@ -75,7 +75,7 @@ class Sexcord():
 """ % (red(), y['username'], y['discriminator'], reset()));
         return y;       
 def main() -> int:
-    sexcord = Sexcord(); sexcord.login();
+    sexcord = Sexcord(tok['token']); sexcord.login();
     sexcord.load_private_channels();
     input(); return 0;
 if __name__ == "__main__":
