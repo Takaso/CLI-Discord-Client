@@ -1,14 +1,15 @@
 import httpx; import json; import os; from other.colors import *; from pick import pick;
-api_url:str = "https://discord.com/api/v10/"; tok = json.load(open("token/config.json"));
+tok = json.load(open("token/config.json"));
 class Sexcord():
     def __init__(self, token) -> None:
+        self.api_url:str = "https://discord.com/api/v10/";
         self.token:str = token;
         self.headers = {
             "Authorization": self.token
         };
         pass;
     def load_private_channels(self) -> list:
-        _r1 = httpx.get("%s/users/@me/channels" % api_url, headers=self.headers); z = _r1.json();
+        _r1 = httpx.get("%s/users/@me/channels" % self.api_url, headers=self.headers); z = _r1.json();
         try:
             _r1.raise_for_status();
         except Exception as x:
@@ -27,7 +28,7 @@ class Sexcord():
             return ["%s#%s" % (item[0],item[1]) for item in lst];
         choice = pick(__extract_channel__(dms), "Choose the channel > ");
         def __send_message__(dm_id:int, content:str) -> int:
-            _r4 = httpx.post("%s/channels/%s/messages" % (api_url, dm_id), headers=self.headers, json={"content": content}); p = _r4.json();
+            _r4 = httpx.post("%s/channels/%s/messages" % (self.api_url, dm_id), headers=self.headers, json={"content": content}); p = _r4.json();
             os.system("cls" if os.name == "nt" else "clear");
             try:
                 _r4.raise_for_status();
@@ -35,7 +36,7 @@ class Sexcord():
                 print("Failed to send message." % p);
             return p;
         def __dm_channel__(dm_id:int, query_parameter:str=""):
-            _r3 = httpx.get("%s/channels/%s/messages?limit=100%s" % (api_url, dm_id, query_parameter), headers=self.headers); l = _r3.json(); l=l[::-1];
+            _r3 = httpx.get("%s/channels/%s/messages?limit=100%s" % (self.api_url, dm_id, query_parameter), headers=self.headers); l = _r3.json(); l=l[::-1];
             def __extract_messages__(lst:list, n:int=0) -> list:
                 return ["%s" % (item[n]) for item in lst];
             messages = [["[+] Exit", "0", "0"]];
@@ -63,7 +64,7 @@ class Sexcord():
         if not "y" in input("User Account? y/n > ").lower():
             self.headers = {"Authorization":"Bot %s" % tok['token']};
         os.system("cls" if os.name == "nt" else "clear");
-        _r2 = httpx.get("%s/users/@me" % api_url, headers=self.headers); y = _r2.json();
+        _r2 = httpx.get("%s/users/@me" % self.api_url, headers=self.headers); y = _r2.json();
         try:
             _r2.raise_for_status();
         except Exception:
